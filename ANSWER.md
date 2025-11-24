@@ -17,7 +17,7 @@
 <img width="1819" height="937" alt="sql_result" src="https://github.com/user-attachments/assets/c8e28978-ea4e-4716-adf0-9928aa4ce8d3" />
 Ссылка: https://github.com/PavelRomash/homework3/tree/my-docker-files
 
-##Задача 5.
+# Задача 5.
 Скрипт для резервного копирования БД
 
 /opt/backup-mysql.sh
@@ -25,15 +25,15 @@
 bash
 #!/bin/bash
 
-# Директория для бэкапов
+### Директория для бэкапов
 BACKUP_DIR="/opt/backup"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 BACKUP_FILE="$BACKUP_DIR/backup_$TIMESTAMP.sql"
 
-# Создаем директорию если не существует
+### Создаем директорию если не существует
 mkdir -p $BACKUP_DIR
 
-# Загружаем переменные окружения из .env файла
+### Загружаем переменные окружения из .env файла
 set -a
 source /opt/homework3/.env
 set +a
@@ -42,11 +42,11 @@ echo "=== Starting MySQL backup with schnitzler/mysqldump ==="
 echo "User: $MYSQL_USER"
 echo "Database: $MYSQL_DATABASE"
 
-# Останавливаем все предыдущие контейнеры schnitzler/mysqldump
+### Останавливаем все предыдущие контейнеры schnitzler/mysqldump
 echo "Cleaning up previous containers..."
 docker ps -q --filter "ancestor=schnitzler/mysqldump" | xargs -r docker stop 2>/dev/null
 
-# Выполняем бэкап используя образ schnitzler/mysqldump
+### Выполняем бэкап используя образ schnitzler/mysqldump
 echo "Creating backup..."
 docker run --rm \
   --network homework3_backend \
@@ -55,7 +55,7 @@ docker run --rm \
   schnitzler/mysqldump \
   -c "mysqldump -h db-mysql -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE --no-tablespaces --skip-lock-tables > /backup/backup_$TIMESTAMP.sql"
 
-# Проверяем успешность выполнения
+### Проверяем успешность выполнения
 if [ $? -eq 0 ] && [ -s $BACKUP_FILE ]; then
     echo "ackup successful: $BACKUP_FILE"
     echo "Backup size: $(du -h $BACKUP_FILE | cut -f1)"
@@ -108,4 +108,5 @@ fi
 
 Устанавливаем скопированный файл и проверяем установку 
 <img width="1250" height="137" alt="version 2" src="https://github.com/user-attachments/assets/4842ee36-5395-4f51-9dfa-55a51ac0db12" />
+
 
